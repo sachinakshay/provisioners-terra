@@ -2,17 +2,19 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY')    // Correct Jenkins credentials ID for AWS Access Key
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_KEY') // Correct Jenkins credentials ID for AWS Secret Key
-        AWS_REGION = 'us-east-1'                             // Specify your AWS region
-        TERRAFORM_DIR = 'terraform'                          // Path to your Terraform configuration
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY')       // Jenkins credentials ID for AWS Access Key
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_KEY')   // Jenkins credentials ID for AWS Secret Key
+        AWS_REGION = 'us-east-1'                                // AWS region
+        TERRAFORM_DIR = 'terraform'                             // Path to Terraform configuration
+        GIT_BRANCH = 'main'                                     // Replace 'main' with your actual branch name if different
     }
 
     stages {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
-                checkout scm
+                git branch: env.GIT_BRANCH, 
+                    url: 'https://github.com/sachinakshay/provisioners-terra.git'
             }
         }
 

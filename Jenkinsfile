@@ -42,9 +42,12 @@ pipeline {
             steps {
                 dir(env.TERRAFORM_DIR) {
                     echo 'Planning Terraform execution...'
-                    bat '''
-                        terraform plan -var="aws_access_key=%AWS_ACCESS_KEY_ID%" -var="aws_secret_key=%AWS_SECRET_ACCESS_KEY%" -var="region=%AWS_REGION%"
-                    '''
+                    bat """
+                        terraform plan ^
+                            -var=\\"aws_access_key=%AWS_ACCESS_KEY_ID%\\" ^
+                            -var=\\"aws_secret_key=%AWS_SECRET_ACCESS_KEY%\\" ^
+                            -var=\\"region=%AWS_REGION%\\"
+                    """
                 }
             }
         }
@@ -53,9 +56,12 @@ pipeline {
             steps {
                 dir(env.TERRAFORM_DIR) {
                     echo 'Applying Terraform configuration...'
-                    bat '''
-                        terraform apply -auto-approve -var="aws_access_key=%AWS_ACCESS_KEY_ID%" -var="aws_secret_key=%AWS_SECRET_ACCESS_KEY%" -var="region=%AWS_REGION%"
-                    '''
+                    bat """
+                        terraform apply -auto-approve ^
+                            -var=\\"aws_access_key=%AWS_ACCESS_KEY_ID%\\" ^
+                            -var=\\"aws_secret_key=%AWS_SECRET_ACCESS_KEY%\\" ^
+                            -var=\\"region=%AWS_REGION%\\"
+                    """
                 }
             }
         }
@@ -73,8 +79,10 @@ pipeline {
 
     post {
         always {
-            echo 'Cleaning up workspace...'
-            cleanWs()
+            node {
+                echo 'Cleaning up workspace...'
+                cleanWs()
+            }
         }
         success {
             echo 'Pipeline completed successfully!'

@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY')    // AWS Access Key ID
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_KEY') // AWS Secret Access Key
-        AWS_REGION = 'us-east-1'                             // AWS region
-        TERRAFORM_DIR = 'terraform'                          // Path to Terraform configuration
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY')    // Correct Jenkins credentials ID for AWS Access Key
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_KEY') // Correct Jenkins credentials ID for AWS Secret Key
+        AWS_REGION = 'us-east-1'                             // Specify your AWS region
+        TERRAFORM_DIR = 'terraform'                          // Path to your Terraform configuration
     }
 
     stages {
@@ -73,8 +73,10 @@ pipeline {
 
     post {
         always {
-            echo 'Cleaning up workspace...'
-            cleanWs() // Cleans workspace after job completion
+            node {
+                echo 'Cleaning up workspace...'
+                cleanWs() // Cleans the workspace
+            }
         }
         success {
             echo 'Pipeline completed successfully!'

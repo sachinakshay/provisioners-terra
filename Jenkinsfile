@@ -72,13 +72,10 @@ pipeline {
     }
 
     post {
-    always {
-        node('your-agent-label') { // Replace 'your-agent-label' with your Jenkins agent's label
+        always {
             echo 'Cleaning up workspace...'
             cleanWs()
         }
-    }
-
         success {
             echo 'Pipeline completed successfully!'
         }

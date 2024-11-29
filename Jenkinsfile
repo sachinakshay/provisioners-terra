@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'master' }  // Specify the Jenkins agent to run on
 
     environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY')    // Jenkins credentials ID for AWS Access Key
@@ -42,12 +42,9 @@ pipeline {
             steps {
                 dir(env.TERRAFORM_DIR) {
                     echo 'Planning Terraform execution...'
-                    bat """
-                        terraform plan ^
-                            -var=\\"aws_access_key=%AWS_ACCESS_KEY_ID%\\" ^
-                            -var=\\"aws_secret_key=%AWS_SECRET_ACCESS_KEY%\\" ^
-                            -var=\\"region=%AWS_REGION%\\"
-                    """
+                    bat '''
+                        terraform plan -var="aws_access_key=%AWS_ACCESS_KEY_ID%" -var="aws_secret_key=%AWS_SECRET_ACCESS_KEY%" -var="region=%AWS_REGION%"
+                    '''
                 }
             }
         }
@@ -56,12 +53,9 @@ pipeline {
             steps {
                 dir(env.TERRAFORM_DIR) {
                     echo 'Applying Terraform configuration...'
-                    bat """
-                        terraform apply -auto-approve ^
-                            -var=\\"aws_access_key=%AWS_ACCESS_KEY_ID%\\" ^
-                            -var=\\"aws_secret_key=%AWS_SECRET_ACCESS_KEY%\\" ^
-                            -var=\\"region=%AWS_REGION%\\"
-                    """
+                    bat '''
+                        terraform apply -auto-approve -var="aws_access_key=%AWS_ACCESS_KEY_ID%" -var="aws_secret_key=%AWS_SECRET_ACCESS_KEY%" -var="region=%AWS_REGION%"
+                    '''
                 }
             }
         }
@@ -79,10 +73,8 @@ pipeline {
 
     post {
         always {
-            node {
-                echo 'Cleaning up workspace...'
-                cleanWs()
-            }
+            echo 'Cleaning up workspace...'
+            cleanWs()
         }
         success {
             echo 'Pipeline completed successfully!'

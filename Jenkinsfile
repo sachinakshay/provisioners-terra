@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY')    // Correct Jenkins credentials ID for AWS Access Key
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_KEY') // Correct Jenkins credentials ID for AWS Secret Key
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY')    // Jenkins credentials ID for AWS Access Key
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_KEY') // Jenkins credentials ID for AWS Secret Key
         AWS_REGION = 'us-east-1'                             // Specify your AWS region
         TERRAFORM_DIR = 'terraform'                          // Path to your Terraform configuration
     }
@@ -72,13 +72,10 @@ pipeline {
     }
 
     post {
-    always {
-        node('your-agent-label') { // Replace 'your-agent-label' with your Jenkins agent's label
+        always {
             echo 'Cleaning up workspace...'
             cleanWs()
         }
-    }
-}
         success {
             echo 'Pipeline completed successfully!'
         }
